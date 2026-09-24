@@ -1,9 +1,10 @@
 name: videos
 on:
   schedule:
-    # Shorts 3/gün: TR 16:00, 21:00, 02:00 (ABD öğlen / akşam)
+    # Shorts 4/gün: TR 16:00, 19:00, 22:00, 02:00 (ABD sabah / öğlen / öğleden sonra / akşam)
     - cron: "0 13 * * *"
-    - cron: "0 18 * * *"
+    - cron: "0 16 * * *"
+    - cron: "0 19 * * *"
     - cron: "0 23 * * *"
     # Uzun video Salı/Perşembe/Cumartesi TR 20:00
     - cron: "0 17 * * 2,4,6"
