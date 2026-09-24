@@ -126,7 +126,7 @@ def main():
     sections = yt.channelSections().list(part='snippet,contentDetails', mine=True).execute().get('items', [])
     seen = set()
     for s in sections:  # kopyaları temizle
-        key = (s['snippet']['type'], tuple(s.get('contentDetails', {}).get('playlists', [])))
+        key = (s['snippet']['type'].lower(), tuple(s.get('contentDetails', {}).get('playlists', [])))
         print(f'  bölüm: {key}')
         if key in seen:
             step(f'kopya bölüm silindi {key}', lambda: yt.channelSections().delete(id=s['id']).execute())
@@ -134,7 +134,7 @@ def main():
     if not ids.get('_sections_done'):
         wanted = [('recentUploads', ()), ('popularUploads', ())] + [('singlePlaylist', (ids[k],)) for k in SECTIONS]
         for pos, (stype, pls) in enumerate(wanted):
-            if (stype, pls) in seen:
+            if (stype.lower(), pls) in seen:
                 continue
             body = {'snippet': {'type': stype, 'position': pos}}
             if pls:
