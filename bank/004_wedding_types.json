@@ -1,0 +1,63 @@
+{
+  "id": "bank_004_wedding_types",
+  "format": "short",
+  "template": "types_of_people",
+  "topic": "a wedding",
+  "title": "Every wedding has THIS guy 😭",
+  "hook": "Types of people at a wedding",
+  "description": "The dancer, the crier, the cake guy... and the one nobody invited.",
+  "tags": ["wedding", "types of people"],
+  "scenes": [
+    {
+      "bg": "wedding",
+      "label": "The early dancer",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "celebrate", "emotion": "excited"},
+        {"id": "nia", "pos": "right", "pose": "arms_crossed", "emotion": "suspicious"}
+      ],
+      "lines": [
+        {"char": "dex", "text": "Nobody asked, but I'm dancing anyway!", "emotion": "excited", "pose": "celebrate", "action": "spin"},
+        {"char": "nia", "text": "Dex, the music hasn't even started.", "emotion": "smug", "pose": "arms_crossed"}
+      ]
+    },
+    {
+      "bg": "wedding",
+      "label": "The crier",
+      "characters": [
+        {"id": "mama_rose", "pos": "left", "pose": "crying", "emotion": "cry"},
+        {"id": "pip", "pos": "right", "pose": "standing", "emotion": "confused"}
+      ],
+      "lines": [
+        {"char": "mama_rose", "text": "They grow up so fast!", "emotion": "cry", "pose": "crying"},
+        {"char": "pip", "text": "Mom, we don't even know these people.", "emotion": "confused", "pose": "shrug"},
+        {"char": "mama_rose", "text": "I cry at ALL weddings!", "emotion": "cry", "pose": "crying"}
+      ]
+    },
+    {
+      "bg": "wedding",
+      "label": "The cake guy",
+      "characters": [
+        {"id": "big_tony", "pos": "left", "pose": "hips", "emotion": "smug"},
+        {"id": "nia", "pos": "right", "pose": "standing", "emotion": "neutral"}
+      ],
+      "lines": [
+        {"char": "big_tony", "text": "I came for the cake. Only the cake.", "emotion": "smug", "pose": "hips"},
+        {"char": "nia", "text": "Tony, the cake is for the bride.", "emotion": "suspicious", "pose": "pointing"},
+        {"char": "big_tony", "text": "Then the bride should have come earlier.", "emotion": "smug", "pose": "arms_crossed", "action": "rimshot"}
+      ]
+    },
+    {
+      "bg": "wedding",
+      "label": "The uninvited speech guy",
+      "characters": [
+        {"id": "coach_barry", "pos": "left", "pose": "fist", "emotion": "excited"},
+        {"id": "dex", "pos": "right", "pose": "standing", "emotion": "confused"}
+      ],
+      "lines": [
+        {"char": "coach_barry", "text": "Marriage is a marathon! HYDRATE!", "emotion": "excited", "pose": "fist"},
+        {"char": "dex", "text": "Coach, who even invited you?", "emotion": "confused", "pose": "shrug"},
+        {"char": "coach_barry", "text": "Nobody! I invited MYSELF! Let's GO!", "emotion": "excited", "pose": "celebrate", "action": "jump"}
+      ]
+    }
+  ]
+}

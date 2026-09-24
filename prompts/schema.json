@@ -1,0 +1,24 @@
+{
+  "format": "short",
+  "title": "He really thought he'd get away with it 😭",
+  "hook": "When mom finds the empty cake box",
+  "description": "One sentence teaser for the YouTube description.",
+  "tags": ["mom", "cake"],
+  "scenes": [
+    {
+      "bg": "kitchen",
+      "card": null,
+      "label": null,
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "nervous"},
+        {"id": "mama_rose", "pos": "right", "pose": "hips", "emotion": "angry"}
+      ],
+      "lines": [
+        {"char": "mama_rose", "text": "Who ate the whole cake?", "emotion": "angry", "pose": "fist"},
+        {"char": "dex", "text": "Probably Pip. He's been acting weird.", "emotion": "nervous", "pose": "shrug",
+         "reactions": {"mama_rose": "suspicious"}},
+        {"char": "mama_rose", "text": "Pip is allergic to chocolate.", "emotion": "angry", "action": "throw_slipper", "target": "dex"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "bank_005_stair_traffic",
+  "format": "short",
+  "template": "plot_twist",
+  "topic": "first job",
+  "title": "Late to work... from upstairs? 💀",
+  "hook": "When you're late to work again",
+  "description": "Big Tony is a generous boss. Dex is a creative employee. Nobody expected the ending.",
+  "tags": ["boss", "late to work", "office"],
+  "scenes": [
+    {
+      "bg": "office",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "nervous"},
+        {"id": "big_tony", "pos": "right", "pose": "arms_crossed", "emotion": "smug"}
+      ],
+      "lines": [
+        {"char": "big_tony", "text": "Dex. You're late. Third time this week.", "emotion": "suspicious", "pose": "arms_crossed"},
+        {"char": "dex", "text": "Traffic, boss. Terrible, terrible traffic.", "emotion": "nervous", "pose": "shrug"},
+        {"char": "big_tony", "text": "You live in the apartment above the office.", "emotion": "suspicious", "pose": "pointing"},
+        {"char": "dex", "text": "Stair traffic. Very busy stairs.", "emotion": "nervous", "pose": "thinking"},
+        {"char": "big_tony", "text": "I am a generous man. You get a raise.", "emotion": "smug", "pose": "hips"},
+        {"char": "dex", "text": "Wait, really? A RAISE?", "emotion": "excited", "pose": "celebrate", "action": "jump"},
+        {"char": "big_tony", "text": "Yes. Raise your hand if you're fired.", "emotion": "smug", "pose": "pointing", "reactions": {"dex": "shock"}, "sfx": "sting"},
+        {"char": "dex", "text": "Joke's on you. I quit yesterday.", "emotion": "smug", "pose": "arms_crossed", "reactions": {"big_tony": "shock"}},
+        {"char": "big_tony", "text": "Then who have I been paying all week?", "emotion": "confused", "pose": "shrug"},
+        {"char": "dex", "text": "...Nobody. Bye!", "emotion": "nervous", "pose": "standing", "action": "run_away"}
+      ]
+    }
+  ]
+}

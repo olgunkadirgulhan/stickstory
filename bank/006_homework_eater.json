@@ -1,0 +1,41 @@
+{
+  "id": "bank_006_homework_eater",
+  "format": "short",
+  "template": "caught",
+  "topic": "school",
+  "title": "The dog ate my homework... but I don't have a dog 😭",
+  "hook": "When you forget your homework again",
+  "description": "Dex has a dog now. Apparently. Nia is not convinced. Pip is everywhere.",
+  "tags": ["school", "homework", "excuses"],
+  "scenes": [
+    {
+      "bg": "classroom",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "nervous"},
+        {"id": "nia", "pos": "right", "pose": "arms_crossed", "emotion": "suspicious"}
+      ],
+      "lines": [
+        {"char": "nia", "text": "Your dog ate your homework AGAIN?", "emotion": "suspicious", "pose": "arms_crossed"},
+        {"char": "dex", "text": "Yes. Tragic. He's a very hungry boy.", "emotion": "sad", "pose": "standing"},
+        {"char": "nia", "text": "Dex. You don't have a dog.", "emotion": "smug", "pose": "hips"},
+        {"char": "dex", "text": "He's new. His name is... Homework Eater.", "emotion": "nervous", "pose": "thinking"},
+        {"char": "nia", "text": "Then why is it in your backpack?", "emotion": "suspicious", "pose": "pointing"},
+        {"char": "dex", "text": "He spit it out. Picky eater.", "emotion": "nervous", "pose": "shrug"},
+        {"char": "nia", "text": "It's completely blank, Dex.", "emotion": "smug", "pose": "arms_crossed", "sfx": "sting"},
+        {"char": "dex", "text": "Yeah! He only ate the answers!", "emotion": "excited", "pose": "celebrate"}
+      ]
+    },
+    {
+      "bg": "classroom",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "smug"},
+        {"id": "pip", "pos": "right", "pose": "phone", "emotion": "excited"}
+      ],
+      "lines": [
+        {"char": "pip", "text": "I'm telling Mom you don't have a dog!", "emotion": "excited", "pose": "phone", "reactions": {"dex": "shock"}},
+        {"char": "dex", "text": "PIP?! You're not even in my class!", "emotion": "shock", "pose": "pointing"},
+        {"char": "pip", "text": "I'm everywhere.", "emotion": "smug", "pose": "arms_crossed", "action": "rimshot"}
+      ]
+    }
+  ]
+}

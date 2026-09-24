@@ -1,0 +1,43 @@
+{
+  "id": "bank_003_fridge_door",
+  "format": "short",
+  "template": "mom_logic",
+  "topic": "parents rules",
+  "title": "Mom logic will never make sense 😂",
+  "hook": "When you turn on the AC at home",
+  "description": "Why is the AC on? Mama Rose has a better idea. It involves the fridge.",
+  "tags": ["mom logic", "summer", "air conditioner"],
+  "scenes": [
+    {
+      "bg": "living_room",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "neutral"},
+        {"id": "mama_rose", "pos": "right", "pose": "hips", "emotion": "angry"}
+      ],
+      "lines": [
+        {"char": "mama_rose", "text": "DEX! Why is the AC on?!", "emotion": "angry", "pose": "fist"},
+        {"char": "dex", "text": "Because it's a hundred degrees outside, Mom.", "emotion": "confused", "pose": "shrug"},
+        {"char": "mama_rose", "text": "Do YOU pay the electric bill?", "emotion": "suspicious", "pose": "hips"},
+        {"char": "dex", "text": "No, but I'm paying with my sweat.", "emotion": "sad", "pose": "standing"},
+        {"char": "mama_rose", "text": "In this house, we cool down with the fridge door.", "emotion": "neutral", "pose": "pointing"}
+      ]
+    },
+    {
+      "bg": "kitchen",
+      "card": "Ten minutes later...",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "happy"},
+        {"id": "mama_rose", "pos": "right", "pose": "standing", "emotion": "shock"}
+      ],
+      "lines": [
+        {"char": "mama_rose", "text": "WHY is the fridge open?!", "emotion": "shock", "pose": "pointing", "sfx": "sting"},
+        {"char": "dex", "text": "You said cool down with the fridge!", "emotion": "confused", "pose": "shrug"},
+        {"char": "mama_rose", "text": "Not for more than three seconds!", "emotion": "angry", "pose": "fist"},
+        {"char": "dex", "text": "That makes zero sense!", "emotion": "angry", "pose": "facepalm"},
+        {"char": "mama_rose", "text": "Say that again. I dare you.", "emotion": "angry", "pose": "fist", "reactions": {"dex": "nervous"}},
+        {"char": "dex", "text": "Mom logic is... the best logic.", "emotion": "nervous", "pose": "standing"},
+        {"char": "mama_rose", "text": "Correct. Now close the door, it's cold.", "emotion": "happy", "pose": "hips", "sfx": "ding"}
+      ]
+    }
+  ]
+}

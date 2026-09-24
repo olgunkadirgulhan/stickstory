@@ -1,0 +1,44 @@
+{
+  "id": "bank_002_abs_by_friday",
+  "format": "short",
+  "template": "expectation_reality",
+  "topic": "the gym",
+  "title": "Abs by Friday? The pink weight had other plans 💀",
+  "hook": "First day at the gym: expectation vs reality",
+  "description": "Dex wants abs by Friday. Coach Barry believes in him. The tiny pink weight does not.",
+  "tags": ["gym", "workout", "expectation vs reality"],
+  "scenes": [
+    {
+      "bg": "gym",
+      "label": "Expectation",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "hips", "emotion": "excited"},
+        {"id": "coach_barry", "pos": "right", "pose": "standing", "emotion": "excited"}
+      ],
+      "lines": [
+        {"char": "dex", "text": "Coach, I want abs by Friday!", "emotion": "excited", "pose": "celebrate"},
+        {"char": "coach_barry", "text": "FRIDAY? I love it! Champions don't wait!", "emotion": "excited", "pose": "fist"},
+        {"char": "dex", "text": "I'll lift the biggest weights like a movie hero.", "emotion": "smug", "pose": "hips"},
+        {"char": "coach_barry", "text": "The whole gym will chant your name!", "emotion": "excited", "pose": "celebrate"},
+        {"char": "dex", "text": "Dex! Dex! Dex!", "emotion": "happy", "pose": "celebrate", "action": "jump"}
+      ]
+    },
+    {
+      "bg": "gym",
+      "card": "Reality",
+      "label": "Reality",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "smug"},
+        {"id": "coach_barry", "pos": "right", "pose": "standing", "emotion": "neutral"}
+      ],
+      "lines": [
+        {"char": "coach_barry", "text": "Okay champ. Lift the tiny pink weight.", "emotion": "neutral", "pose": "pointing"},
+        {"char": "dex", "text": "Easy. Watch and learn, Coach.", "emotion": "smug", "pose": "arms_crossed"},
+        {"char": "dex", "text": "Why is it... so... HEAVY?", "emotion": "shock", "pose": "fist", "action": "faint"},
+        {"char": "coach_barry", "text": "He's resting! Resting is part of training!", "emotion": "excited", "pose": "shrug"},
+        {"char": "dex", "text": "Coach... I can see my ancestors.", "emotion": "cry"},
+        {"char": "coach_barry", "text": "Great! Tell them we start cardio tomorrow!", "emotion": "excited", "pose": "fist", "sfx": "ding"}
+      ]
+    }
+  ]
+}

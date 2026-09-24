@@ -1,0 +1,42 @@
+{
+  "id": "bank_001_birthday_cake",
+  "format": "short",
+  "template": "caught",
+  "topic": "parents rules",
+  "title": "He really thought chocolate sunscreen would work 😭",
+  "hook": "When mom finds the empty cake box",
+  "description": "Dex has a flawless excuse. Mama Rose has a slipper. Pip has a secret.",
+  "tags": ["mom", "cake", "caught lying"],
+  "scenes": [
+    {
+      "bg": "kitchen",
+      "characters": [
+        {"id": "dex", "pos": "left", "pose": "standing", "emotion": "nervous"},
+        {"id": "mama_rose", "pos": "right", "pose": "hips", "emotion": "angry"}
+      ],
+      "lines": [
+        {"char": "mama_rose", "text": "WHO ate my birthday cake?!", "emotion": "angry", "pose": "fist"},
+        {"char": "dex", "text": "Cake? What cake? We had cake?", "emotion": "nervous", "pose": "shrug"},
+        {"char": "mama_rose", "text": "The one I hid behind the broccoli.", "emotion": "suspicious", "pose": "hips"},
+        {"char": "dex", "text": "Nobody looks behind broccoli. Nobody!", "emotion": "nervous", "pose": "standing"},
+        {"char": "mama_rose", "text": "Then why is there frosting on your face?", "emotion": "suspicious", "pose": "pointing"},
+        {"char": "dex", "text": "That's sunscreen. Chocolate sunscreen. It's brand new.", "emotion": "smug", "pose": "arms_crossed"},
+        {"char": "mama_rose", "text": "We are INSIDE, Dex.", "emotion": "angry", "pose": "hips", "reactions": {"dex": "shock"}},
+        {"char": "dex", "text": "Lamps are basically tiny suns. Science, Mom.", "emotion": "nervous", "pose": "thinking"},
+        {"char": "mama_rose", "text": "And the birthday candle stuck in your hair?", "emotion": "suspicious", "pose": "pointing", "sfx": "sting"},
+        {"char": "dex", "text": "Fine! Pip ate it! I only licked the box!", "emotion": "cry", "pose": "crying"},
+        {"char": "mama_rose", "text": "Licking counts.", "emotion": "angry", "pose": "hips", "action": "throw_slipper", "target": "dex"}
+      ]
+    },
+    {
+      "bg": "bedroom",
+      "card": "Meanwhile upstairs...",
+      "characters": [
+        {"id": "pip", "pos": "center", "pose": "phone", "emotion": "smug"}
+      ],
+      "lines": [
+        {"char": "pip", "text": "Two cakes down. Three to go.", "emotion": "smug", "pose": "phone", "action": "rimshot"}
+      ]
+    }
+  ]
+}
