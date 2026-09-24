@@ -81,23 +81,22 @@ def main():
         'id': cid, 'status': {'selfDeclaredMadeForKids': False}}).execute())
 
     def watermark():
-        body = {'timing': {'type': 'offsetFromStart', 'offsetMs': 0},
-                'position': {'type': 'corner', 'cornerPosition': 'topRight'}}
-        errors = []
-        for kw in (dict(resumable=True, chunksize=-1), dict(resumable=False), dict(resumable=True, chunksize=256 * 1024)):
-            try:
-                media = MediaFileUpload(str(BRAND / 'watermark.png'), mimetype='image/png', **kw)
-                req = yt.watermarks().set(channelId=cid, body=body, media_body=media)
-                if kw.get('resumable'):
-                    resp = None
-                    while resp is None:
-                        _, resp = req.next_chunk()
-                else:
-                    req.execute()
-                return
-            except Exception as e:
-                errors.append(str(e)[:150])
-        raise RuntimeError(' | '.join(errors))
+        # googleapiclient bu uç noktada 'range() arg 3 must not be zero' veriyor -> ham multipart istek
+        from google.auth.transport.requests import AuthorizedSession
+        from google.oauth2.credentials import Credentials
+        import os
+        creds = Credentials(None, refresh_token=os.environ['YT_REFRESH_TOKEN'], client_id=os.environ['YT_CLIENT_ID'],
+                            client_secret=os.environ['YT_CLIENT_SECRET'], token_uri='https://oauth2.googleapis.com/token')
+        b = 'stickstoryBoundary'
+        meta = json.dumps({'timing': {'type': 'offsetFromStart', 'offsetMs': 0},
+                           'position': {'type': 'corner', 'cornerPosition': 'topRight'}})
+        data = (f'--{b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{meta}\r\n--{b}\r\n'
+                'Content-Type: image/png\r\n\r\n').encode() + (BRAND / 'watermark.png').read_bytes() + f'\r\n--{b}--\r\n'.encode()
+        r = AuthorizedSession(creds).post(
+            f'https://www.googleapis.com/upload/youtube/v3/watermarks/set?channelId={cid}&uploadType=multipart',
+            data=data, headers={'Content-Type': f'multipart/related; boundary={b}'})
+        if r.status_code >= 300:
+            raise RuntimeError(f'{r.status_code} {r.text[:200]}')
     step('filigran (abone ol)', watermark)
 
     existing = {p['snippet']['title']: p['id'] for p in
@@ -124,17 +123,26 @@ def main():
             continue
         step(f"video {row['video_id']} -> {key}", lambda: upload.add_to_playlist(ids[key], row['video_id']))
 
-    have = yt.channelSections().list(part='snippet,contentDetails', mine=True).execute().get('items', [])
-    have = {(s['snippet']['type'], tuple(s.get('contentDetails', {}).get('playlists', []))) for s in have}
-    wanted = [('recentUploads', ()), ('popularUploads', ())] + [('singlePlaylist', (ids[k],)) for k in SECTIONS]
-    for pos, (stype, pls) in enumerate(wanted):
-        if (stype, pls) in have:
-            continue
-        body = {'snippet': {'type': stype, 'position': pos}}
-        if pls:
-            body['contentDetails'] = {'playlists': list(pls)}
-        step(f'ana sayfa bölümü {stype} {pls}', lambda: yt.channelSections().insert(
-            part='snippet,contentDetails', body=body).execute())
+    sections = yt.channelSections().list(part='snippet,contentDetails', mine=True).execute().get('items', [])
+    seen = set()
+    for s in sections:  # kopyaları temizle
+        key = (s['snippet']['type'], tuple(s.get('contentDetails', {}).get('playlists', [])))
+        print(f'  bölüm: {key}')
+        if key in seen:
+            step(f'kopya bölüm silindi {key}', lambda: yt.channelSections().delete(id=s['id']).execute())
+        seen.add(key)
+    if not ids.get('_sections_done'):
+        wanted = [('recentUploads', ()), ('popularUploads', ())] + [('singlePlaylist', (ids[k],)) for k in SECTIONS]
+        for pos, (stype, pls) in enumerate(wanted):
+            if (stype, pls) in seen:
+                continue
+            body = {'snippet': {'type': stype, 'position': pos}}
+            if pls:
+                body['contentDetails'] = {'playlists': list(pls)}
+            step(f'ana sayfa bölümü {stype} {pls}', lambda: yt.channelSections().insert(
+                part='snippet,contentDetails', body=body).execute())
+        ids['_sections_done'] = True
+        PLAYLISTS_FILE.write_text(json.dumps(ids, indent=2) + '\n', encoding='utf-8')
     print('\nElle yapılacak: branding/profile.png -> YouTube Studio > Customization > Branding > Picture')
 
 
