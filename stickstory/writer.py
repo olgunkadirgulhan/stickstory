@@ -15,7 +15,7 @@ from .cast import ACTIONS, CAST, EMOTIONS, POSES, SFX, bible
 ROOT = Path(__file__).resolve().parent.parent
 PROMPTS = ROOT / 'prompts'
 BANK = ROOT / 'bank'
-MODELS = 'gemini-3.5-flash,gemini-flash-latest,gemini-flash-lite-latest,gemini-3.5-flash-lite'
+MODELS = 'gemini-3.8-flash,gemini-3.5-flash,gemini-flash-latest,gemini-3-flash-preview,gemini-flash-lite-latest'
 
 SHORT_TEMPLATES = {
     'caught': 'Caught: Dex lies -> Nia or Mama Rose catches him with evidence -> punishment punchline.',
@@ -125,7 +125,7 @@ def normalize(sc, fmt):
         if not S['characters']:
             problems.append('scene without characters')
     sc['scenes'] = [S for S in sc['scenes'] if S['lines']]
-    lo, hi = (6, 14) if fmt == 'short' else (30, 70)
+    lo, hi = (8, 14) if fmt == 'short' else (30, 70)
     if not lo <= n_lines <= hi:
         problems.append(f'{n_lines} spoken lines (want {lo}-{hi})')
     if not has_gag:
@@ -174,9 +174,20 @@ def write_with_gemini(fmt, template, topic, hist):
         poses=', '.join(POSES), emotions=', '.join(EMOTIONS), actions=', '.join(ACTIONS), sfx=', '.join(SFX),
         recent=recent_titles or '(none yet)',
     )
+    if fmt == 'short':
+        ex = sorted(BANK.glob('*.json'))
+        random.shuffle(ex)
+        shots = []
+        for p in ex[:2]:
+            e = json.loads(p.read_text(encoding='utf-8'))
+            shots.append('\n'.join(f"{L['char']}: {L['text']}" + (f"  [action: {L['action']}]" if L.get('action') else '')
+                                   for S in e['scenes'] for L in S['lines']))
+        prompt += ('\n\nEXAMPLES of the pacing, length (9-12 lines) and joke density we want. Every line is a joke '
+                   'or a setup; excuses get more absurd; the ending flips everything. Do NOT copy these jokes or '
+                   'topics:\n\n' + '\n\n---\n\n'.join(shots))
     judge_tpl = (PROMPTS / 'judge.txt').read_text(encoding='utf-8')
     best, best_score, feedback = None, -1, ''
-    for attempt in range(3):
+    for attempt in range(4):
         try:
             sc = parse_json(gemini(prompt + feedback))
         except Exception as e:
@@ -224,7 +235,9 @@ def make_script(fmt, hist, seed=None):
         try:
             sc = write_with_gemini(fmt, template, topic, hist)
             sc.update(id=f'{fmt}_{stamp}', template=template, topic=topic, source='gemini')
-            return sc
+            if sc.get('judge_score', 0) >= 5 or fmt != 'short' or from_bank(fmt, hist) is None:
+                return sc
+            log(f"best Gemini score {sc['judge_score']} < 5, using a bank script instead")
         except Exception as e:
             log(f'Gemini failed, falling back to bank: {str(e)[:200]}')
     sc = from_bank(fmt, hist)
