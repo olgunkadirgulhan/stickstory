@@ -45,7 +45,7 @@ def log(m):
 
 
 def gemini(prompt, temperature=0.95, timeout=120, as_json=True):
-    key = os.environ.get('GEMINI_API_KEY')
+    key = (os.environ.get('GEMINI_API_KEY') or '').strip().lstrip('﻿')
     if not key:
         raise RuntimeError('GEMINI_API_KEY not set')
     models = [m.strip() for m in (os.environ.get('GEMINI_MODELS') or MODELS).split(',') if m.strip()]
