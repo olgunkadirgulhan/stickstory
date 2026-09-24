@@ -83,7 +83,11 @@ def metadata(sc):
     names = sorted({CAST[c['id']]['name'] for S in sc['scenes'] for c in S['characters']})
     tags = BASE_TAGS + [t for t in sc.get('tags', []) if isinstance(t, str)]
     tags += [n.lower() for n in names]
-    hashtags = '#shorts #animation #comedy #funny' if sc['format'] == 'short' else '#animation #comedy #cartoon'
+    tag_by_template = {'caught': '#caughtlying', 'mom_logic': '#momlogic', 'expectation_reality': '#expectationvsreality',
+                       'types_of_people': '#typesofpeople', 'plot_twist': '#plottwist'}
+    extra = tag_by_template.get(sc.get('template'), '#cartoon')
+    hashtags = (f'#shorts #DexAndFriends #animation #comedy #funny {extra}' if sc['format'] == 'short'
+                else '#DexAndFriends #animation #comedy #cartoon #animatedseries')
     desc = (f"{sc.get('description', '')}\n\n"
             f"Starring: {', '.join(names)}\n"
             'New animated comedy every day. Subscribe so you never miss what Dex does next!\n\n'
@@ -181,6 +185,12 @@ def main():
         qpath.unlink(missing_ok=True)
     url = f'https://youtube.com/shorts/{vid}' if fmt == 'short' else f'https://youtu.be/{vid}'
     log(f'uploaded {url} ({mode})')
+    pls = json.loads((HERE / 'playlists.json').read_text(encoding='utf-8')) if (HERE / 'playlists.json').exists() else {}
+    if sc.get('template') in pls:
+        try:
+            upload.add_to_playlist(pls[sc['template']], vid); log(f"added to playlist {sc['template']}")
+        except Exception as e:
+            log(f'playlist add skipped: {str(e)[:160]}')
     if fmt == 'long':
         try:
             upload.set_thumbnail(vid, out / 'thumb.png'); log('thumbnail set')
