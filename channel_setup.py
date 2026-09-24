@@ -80,10 +80,25 @@ def main():
     step('kanal: çocuklara yönelik değil', lambda: yt.channels().update(part='status', body={
         'id': cid, 'status': {'selfDeclaredMadeForKids': False}}).execute())
 
-    step('filigran (abone ol)', lambda: yt.watermarks().set(channelId=cid, body={
-        'timing': {'type': 'offsetFromStart', 'offsetMs': 0},
-        'position': {'type': 'corner', 'cornerPosition': 'topRight'}},
-        media_body=MediaFileUpload(str(BRAND / 'watermark.png'), mimetype='image/png')).execute())
+    def watermark():
+        body = {'timing': {'type': 'offsetFromStart', 'offsetMs': 0},
+                'position': {'type': 'corner', 'cornerPosition': 'topRight'}}
+        errors = []
+        for kw in (dict(resumable=True, chunksize=-1), dict(resumable=False), dict(resumable=True, chunksize=256 * 1024)):
+            try:
+                media = MediaFileUpload(str(BRAND / 'watermark.png'), mimetype='image/png', **kw)
+                req = yt.watermarks().set(channelId=cid, body=body, media_body=media)
+                if kw.get('resumable'):
+                    resp = None
+                    while resp is None:
+                        _, resp = req.next_chunk()
+                else:
+                    req.execute()
+                return
+            except Exception as e:
+                errors.append(str(e)[:150])
+        raise RuntimeError(' | '.join(errors))
+    step('filigran (abone ol)', watermark)
 
     existing = {p['snippet']['title']: p['id'] for p in
                 yt.playlists().list(part='snippet', mine=True, maxResults=50).execute().get('items', [])}
