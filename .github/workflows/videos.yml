@@ -1,13 +1,11 @@
 name: videos
 on:
   schedule:
-    # Shorts 4/gün: TR 16:00, 19:00, 22:00, 02:00 (ABD sabah / öğlen / öğleden sonra / akşam)
-    - cron: "0 13 * * *"
-    - cron: "0 16 * * *"
-    - cron: "0 19 * * *"
-    - cron: "0 23 * * *"
-    # Uzun video Salı/Perşembe/Cumartesi TR 20:00
-    - cron: "0 17 * * 2,4,6"
+    # Shorts 4/gün: slotlar 13:00, 16:00, 19:00, 22:00 UTC (TR 16, 19, 22, 01).
+    # Uzun video Salı/Perşembe/Cumartesi 17:00 UTC (TR 20:00).
+    # GitHub cron'u geciktiriyor/düşürüyor: saatlik tetiklenir (yoğun :00 dışında),
+    # .github/slot_guard.py sadece zamanı gelmiş ve yüklenmemiş slot varsa video yapar.
+    - cron: "7 13-23 * * *"
   workflow_dispatch:
     inputs:
       format:
@@ -28,7 +26,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  guard:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.g.outputs.go }}
+      mode: ${{ steps.g.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: g
+        env:
+          LOG_FILE: published.csv
+          SLOTS: "13:00,16:00,19:00,22:00"
+          LONG: "tue 17:00 long,thu 17:00 long,sat 17:00 long"
+        run: python3 .github/slot_guard.py
+
   make:
+    needs: guard
+    if: always() && (github.event_name != 'schedule' || needs.guard.outputs.go == '1')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -49,8 +64,7 @@ jobs:
         id: fmt
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "f=${{ inputs.format }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.schedule }}" = "0 17 * * 2,4,6" ]; then echo "f=long" >> $GITHUB_OUTPUT
-          else echo "f=short" >> $GITHUB_OUTPUT; fi
+          else echo "f=${{ needs.guard.outputs.mode }}" >> $GITHUB_OUTPUT; fi
       - name: Run pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
