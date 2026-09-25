@@ -15,7 +15,9 @@ from .cast import ACTIONS, CAST, EMOTIONS, POSES, SFX, bible
 ROOT = Path(__file__).resolve().parent.parent
 PROMPTS = ROOT / 'prompts'
 BANK = ROOT / 'bank'
-MODELS = 'gemini-3.8-flash,gemini-3.5-flash,gemini-flash-latest,gemini-3-flash-preview,gemini-flash-lite-latest'
+# flash modelleri aynı kapasite havuzunda, çoğu zaman birlikte 503 veriyor; lite ve gemma genelde yanıt verir
+MODELS = ('gemini-3.8-flash,gemini-3.5-flash,gemini-flash-latest,gemini-3.7-flash,gemini-3-flash-preview,'
+          'gemini-flash-lite-latest,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemma-4-26b-a4b-it,gemma-4-31b-it')
 
 SHORT_TEMPLATES = {
     'caught': 'Caught: Dex lies -> Nia or Mama Rose catches him with evidence -> punishment punchline.',
@@ -49,25 +51,30 @@ def gemini(prompt, temperature=0.95, timeout=120, as_json=True):
     if not key:
         raise RuntimeError('GEMINI_API_KEY not set')
     models = [m.strip() for m in (os.environ.get('GEMINI_MODELS') or MODELS).split(',') if m.strip()]
-    cfg = {'temperature': temperature}
-    if as_json:
-        cfg['responseMimeType'] = 'application/json'
-    body = {'contents': [{'parts': [{'text': prompt}]}], 'generationConfig': cfg}
     errors = []
     for attempt in range(2):
         for model in models:
+            cfg = {'temperature': temperature}
+            if as_json and not model.startswith('gemma'):   # gemma'da JSON modu yok; parse_json çitleri temizler
+                cfg['responseMimeType'] = 'application/json'
+            body = {'contents': [{'parts': [{'text': prompt}]}], 'generationConfig': cfg}
             url = f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent'
             try:
                 r = requests.post(url, json=body, headers={'x-goog-api-key': key}, timeout=timeout)
             except requests.RequestException as e:
                 errors.append(f'{model}:{type(e).__name__}'); continue
             if r.status_code == 200:
-                parts = r.json()['candidates'][0]['content']['parts']
-                return ''.join(p.get('text', '') for p in parts if not p.get('thought')).strip()
+                cands = r.json().get('candidates') or [{}]
+                parts = cands[0].get('content', {}).get('parts', [])
+                text = ''.join(p.get('text', '') for p in parts if not p.get('thought')).strip()
+                if text:
+                    return text
+                errors.append(f'{model}:empty'); continue
             errors.append(f'{model}:{r.status_code}')
             if r.status_code not in (404, 429, 500, 503):
                 r.raise_for_status()
-        time.sleep(15)
+        if attempt == 0:
+            time.sleep(60)   # tüm modeller meşgul: yoğunluk genelde 1-2 dakikada geçer
     raise RuntimeError(f"Gemini unavailable: {', '.join(errors)}")
 
 
