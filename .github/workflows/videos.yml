@@ -17,6 +17,10 @@ on:
         description: Render only, do not upload
         type: boolean
         default: false
+      auto:
+        description: External scheduler call - follow the slot plan like a scheduled run
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -27,7 +31,7 @@ concurrency:
 
 jobs:
   guard:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || inputs.auto
     runs-on: ubuntu-latest
     outputs:
       go: ${{ steps.g.outputs.go }}
@@ -43,7 +47,7 @@ jobs:
 
   make:
     needs: guard
-    if: always() && (github.event_name != 'schedule' || needs.guard.outputs.go == '1')
+    if: always() && ((github.event_name != 'schedule' && !inputs.auto) || needs.guard.outputs.go == '1')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -63,7 +67,7 @@ jobs:
       - name: Pick format
         id: fmt
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "f=${{ inputs.format }}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.auto }}" != "true" ]; then echo "f=${{ inputs.format }}" >> $GITHUB_OUTPUT
           else echo "f=${{ needs.guard.outputs.mode }}" >> $GITHUB_OUTPUT; fi
       - name: Run pipeline
         env:
